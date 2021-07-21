@@ -88,6 +88,8 @@ Edit `/etc/fstab` and add:
 ```
 
 ## Install grub bootloader
+`pacman -S grub efibootmgr dosfstools mtools`
+
 Edit `/etc/default/grub` and change:
 ```
 GRUB_CMDLINE_LINUX="cryptdevice=UUID=<crypt_root_uuid>:<crypt_root_name> root=/dev/mapper/<crypt_root_name> resume=/dev/mapper/<crypt_swap_name>"
@@ -97,6 +99,11 @@ Only add resume if you are encrypting the swap partition.
 `grub-install --efi-directory=/boot`µ
 
 `grub-mkconfig -o /boot/grub/grub.cfg`
+
+## Enable networking
+`pacman -S networkmanager`
+
+`systemctl enable NetworkManager`
 
 ## Exit the system and ENJOY
 ```
