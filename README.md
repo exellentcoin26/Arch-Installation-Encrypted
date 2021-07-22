@@ -66,7 +66,31 @@ Edit `/etc/hosts` and add:
 ```
 
 ## Encryption configuration
-Edit `/etc/mkinitcpio.conf` and change `HOOKS=(...)` to `HOOKS=(... modconf keyboard keymap ... encrypt resume filesystems`
+`swapoff /dev/mapper/<crypt_swap_name>`
+
+Edit `/etc/initcpio/hooks/openswap` and add:
+```
+run_hook ()
+{
+    cryptsetup open /dev/<swap_partition> <crypt_swap_name>
+}
+```
+
+Edit `/etc/initpcio/install/openswap` and add:
+```
+build ()
+{
+   add_runscript
+}
+help ()
+{
+cat<<HELPEOF
+  This opens the swap encrypted partition /dev/<device> in /dev/mapper/swapDevice
+HELPEOF
+}
+```
+
+Edit `/etc/mkinitcpio.conf` and change `HOOKS=(...)` to `HOOKS=(... modconf keyboard keymap ... encrypt openswap resume filesystems`
 
 Only add `resume` if you plan on encrypting the swap partition.
 
