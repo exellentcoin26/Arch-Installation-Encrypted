@@ -44,6 +44,9 @@ mount /dev/mapper/<crypt_home_name> /mnt/home or mount /dev/<home_partition> /mn
 
 ## Install the operating system
 `pacstrap /mnt base base-devel linux linux-firmware amd-ucode vim man`
+
+If you are using an intel system, use `intel-ucode` instaid of `amd-ucode`.
+
 `genfstab -U /mnt >> /mnt/etc/fstab`
 
 ## Chroot into the installed system
@@ -123,6 +126,29 @@ Only add resume if you are encrypting the swap partition.
 `grub-install --efi-directory=/boot`µ
 
 `grub-mkconfig -o /boot/grub/grub.cfg`
+
+## User setup
+### Create a user
+`useradd -m <username>`
+`passwd <username>`
+
+### Add uer to necessary groups
+`usermod -aG wheel,audio,video,optical,storage <username>`
+
+Only add `wheel` if you want the user to have `sudo` priveleges.
+
+### Setup `sudo`
+`pacman -S sudo`
+
+(`sudo` is already included in the `base-devel` package.)
+
+Enter `visudo` and uncomment the line:
+
+`%wheel ALL=(ALL) ALL`
+
+And save by typing `ESC, COLON, w, q`.
+
+Or use an editor of choice by typing `EDITOR=<editor> visudo`
 
 ## Enable networking
 `pacman -S networkmanager`
